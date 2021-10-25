@@ -21,23 +21,67 @@ const config = {
   permission: process.env.PERMISSION,
   privateKey: process.env.PRIV_KEY,
   contracts: ['acckylin1111', 'forceonkyli2'],
-  actions: ['open', 'vtransfer', 'withdraw', 'joincampaign', 'mkbatch', 'mkcampaign', 'reservetask', 'submittask']
+  actions: [
+    {
+      name: 'open',
+      payer: true,
+      sig: false
+    },
+    {
+      name: 'vtransfer',
+      payer: false,
+      sig: true
+    },
+    {
+      name: 'withdraw',
+      payer: false,
+      sig: true
+    },
+    {
+      name: 'joincampaign',
+      payer: true,
+      sig: true
+    },
+    {
+      name: 'mkbatch',
+      payer: true,
+      sig: true
+    },
+    {
+      name: 'mkcampaign',
+      payer: true,
+      sig: true
+    },
+    {
+      name: 'reservetask',
+      payer: true,
+      sig: true
+    },
+    {
+      name: 'submittask',
+      payer: true,
+      sig: true
+    }]
 }
 
 const signatureProvider = new JsSignatureProvider([config.privateKey]);
 const rpc = new JsonRpc(config.host, { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
+// TODO: UNIT test
 app.post('/transaction', async (req, res) => {
   try {
     const transaction = req.body
+
+    const action = config.actions.filter(action => {
+      return action.name === transaction.name
+    })
   
-    if (config.contracts.includes(transaction.account) && config.actions.includes(transaction.name)) {
+    if (action && config.contracts.includes(transaction.account) && (action[0].sig ? (transaction.data.sig && transaction.data.sig.length > 0) : true)) {
       transaction.authorization[0].actor = config.relayer
       transaction.authorization[0].permission = config.permission
 
-      // maybe specify for every action when payer needs to added?
-      if (transaction.data.payer) {
+      if (action[0].payer) {
         transaction.data.payer = config.relayer
       }
 
