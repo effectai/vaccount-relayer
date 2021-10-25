@@ -4,6 +4,8 @@ import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js'
 import fetch from 'node-fetch';
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import dotenv from 'dotenv'
+dotenv.config()
 const app = express()
 const port = 3001
 
@@ -13,12 +15,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 })); 
 
-// Add proper config
 const config = {
-  host: 'https://api.kylin.alohaeos.com:443',
-  relayer: '',
-  permission: 'active',
-  privateKey: '',
+  host: process.env.HOST,
+  relayer: process.env.RELAYER,
+  permission: process.env.PERMISSION,
+  privateKey: process.env.PRIV_KEY,
   contracts: ['acckylin1111', 'forceonkyli2'],
   actions: ['open', 'vtransfer', 'withdraw', 'joincampaign', 'mkbatch', 'mkcampaign', 'reservetask', 'submittask']
 }
