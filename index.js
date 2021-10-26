@@ -20,47 +20,56 @@ const config = {
   relayer: process.env.RELAYER,
   permission: process.env.PERMISSION,
   privateKey: process.env.PRIV_KEY,
+  relayerVAccountId: process.env.VACCOUNT_ID,
   contracts: ['acckylin1111', 'forceonkyli2'],
   actions: [
     {
       name: 'open',
       payer: true,
-      sig: false
+      sig: false,
+      relayerNotAllowed: []
     },
     {
       name: 'vtransfer',
       payer: false,
-      sig: true
+      sig: true,
+      relayerNotAllowed: ['from_id']
     },
     {
       name: 'withdraw',
       payer: false,
-      sig: true
+      sig: true,
+      relayerNotAllowed: ['from_id']
     },
     {
       name: 'joincampaign',
       payer: true,
-      sig: true
+      sig: true,
+      relayerNotAllowed: ['account_id']
     },
     {
       name: 'mkbatch',
       payer: true,
-      sig: true
+      sig: true,
+      relayerNotAllowed: []
     },
     {
       name: 'mkcampaign',
       payer: true,
-      sig: true
+      sig: true,
+      relayerNotAllowed: []
     },
     {
       name: 'reservetask',
       payer: true,
-      sig: true
+      sig: true,
+      relayerNotAllowed: ['account_id']
     },
     {
       name: 'submittask',
       payer: true,
-      sig: true
+      sig: true,
+      relayerNotAllowed: ['account_id']
     }]
 }
 
@@ -68,7 +77,6 @@ const signatureProvider = new JsSignatureProvider([config.privateKey]);
 const rpc = new JsonRpc(config.host, { fetch });
 const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
-// TODO: UNIT test
 app.post('/transaction', async (req, res) => {
   try {
     const transaction = req.body
@@ -76,8 +84,18 @@ app.post('/transaction', async (req, res) => {
     const action = config.actions.filter(action => {
       return action.name === transaction.name
     })
+
+    // check if relayer vaccountid isn't used as account_id or from_account
+    if (action[0]) {
+      action[0].relayerNotAllowed.forEach(element => {
+        if(transaction.data[element] == config.relayerVAccountId) {
+          res.sendStatus(403)
+          throw new Error('Action not permitted')
+        }
+      });
+    }
   
-    if (action && config.contracts.includes(transaction.account) && (action[0].sig ? (transaction.data.sig && transaction.data.sig.length > 0) : true)) {
+    if (action[0] && config.contracts.includes(transaction.account) && (action[0].sig ? (transaction.data.sig && transaction.data.sig.length > 0) : true)) {
       transaction.authorization[0].actor = config.relayer
       transaction.authorization[0].permission = config.permission
 
@@ -94,11 +112,14 @@ app.post('/transaction', async (req, res) => {
 
       console.log('result', result)
 
-      res.end(JSON.stringify(result.transaction_id));
+      res.end(JSON.stringify(result));
     } else {
+      res.sendStatus(403)
       throw new Error('Action not permitted')
     }
   } catch (error) {
+    console.log('error', error)
+    res.sendStatus(400)
     throw new Error(error)
   }
 })
@@ -106,3 +127,5 @@ app.post('/transaction', async (req, res) => {
 app.listen(port, () => {
   console.log(`Force relayer listening at http://localhost:${port}`)
 })
+
+export default app
