@@ -118,7 +118,6 @@ app.post('/transaction', async (req, res) => {
       throw new Error('Action not permitted')
     }
   } catch (error) {
-    console.log('error', error)
     res.sendStatus(400)
     throw new Error(error)
   }
