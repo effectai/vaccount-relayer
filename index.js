@@ -1,10 +1,8 @@
 import express from 'express';
-import { Api, JsonRpc } from 'eosjs'
-import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig.js'
-import fetch from 'node-fetch';
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import api from './services/eos.js'
 dotenv.config()
 const app = express()
 const port = 3001
@@ -72,10 +70,6 @@ const config = {
       relayerNotAllowed: ['account_id']
     }]
 }
-
-const signatureProvider = new JsSignatureProvider([config.privateKey]);
-const rpc = new JsonRpc(config.host, { fetch });
-const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
 app.post('/transaction', async (req, res) => {
   try {
