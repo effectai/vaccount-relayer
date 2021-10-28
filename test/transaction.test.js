@@ -70,7 +70,7 @@ describe("POST /transaction wrong action", function() {
 
 // transaction with an invalid contract
 describe("POST /transaction wrong contract", function() {
-  it("it should give an error that the contract allowed", function(done) {
+  it("it should give an error that the contract isnt allowed", function(done) {
     supertest(app)
       .post("/transaction")
       .send({
@@ -96,7 +96,7 @@ describe("POST /transaction wrong contract", function() {
 
 // transaction without sig that requires sig
 describe("POST /transaction transaction without sig that requires sig", function() {
-  it("it should give an error that the contract allowed", function(done) {
+  it("transaction without sig that requires sig", function(done) {
     supertest(app)
       .post("/transaction")
       .send({
@@ -127,7 +127,7 @@ describe("POST /transaction transaction without sig that requires sig", function
 
 // transaction should succeed
 describe("POST /transaction", function() {
-  it("it should give an error that the contract allowed", function(done) {
+  it("transaction should succeed", function(done) {
     supertest(app)
       .post("/transaction")
       .send({
