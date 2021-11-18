@@ -21,7 +21,7 @@ const config = {
   permission: process.env.PERMISSION,
   privateKey: process.env.PRIV_KEY,
   relayerVAccountId: process.env.VACCOUNT_ID,
-  contracts: ['acckylin1111', 'forceonkyli2'],
+  contracts: process.env.ALLOWED_CONTRACTS.split(", "),
   actions: [
     {
       name: 'open',
@@ -84,6 +84,11 @@ app.post('/transaction', async (req, res) => {
     const action = config.actions.filter(action => {
       return action.name === transaction.name
     })
+
+    if (action.length > 1) {
+      res.sendStatus(403)
+      throw new Error('Mulitple actions are not allowed')
+    }
 
     // check if relayer vaccountid isn't used as account_id or from_account
     if (action[0]) {
