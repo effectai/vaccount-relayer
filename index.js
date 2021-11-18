@@ -13,7 +13,7 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
-})); 
+}));
 
 const config = {
   host: process.env.HOST,
@@ -21,7 +21,7 @@ const config = {
   permission: process.env.PERMISSION,
   privateKey: process.env.PRIV_KEY,
   relayerVAccountId: process.env.VACCOUNT_ID,
-  contracts: ['acckylin1111', 'forceonkyli2'],
+  contracts: process.env.ALLOWED_CONTRACTS.split(", "),
   actions: [
     {
       name: 'open',
@@ -79,40 +79,46 @@ const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), te
 
 app.post('/transaction', async (req, res) => {
   try {
-    const transaction = req.body
+    const reqAction = req.body
 
     const action = config.actions.filter(action => {
-      return action.name === transaction.name
+      return action.name === reqAction.name
     })
+
+    if (action.length > 1) {
+      res.sendStatus(403)
+      throw new Error('Mulitple actions are not allowed')
+    }
 
     // check if relayer vaccountid isn't used as account_id or from_account
     if (action[0]) {
       action[0].relayerNotAllowed.forEach(element => {
-        if(transaction.data[element] == config.relayerVAccountId) {
+        if(reqAction.data[element] == config.relayerVAccountId) {
           res.sendStatus(403)
           throw new Error('Action not permitted')
         }
       });
     }
   
-    if (action[0] && config.contracts.includes(transaction.account) && (action[0].sig ? (transaction.data.sig && transaction.data.sig.length > 0) : true)) {
-      transaction.authorization[0].actor = config.relayer
-      transaction.authorization[0].permission = config.permission
+    if (action[0] && config.contracts.includes(reqAction.account) && (action[0].sig ? (reqAction.data.sig && reqAction.data.sig.length > 0) : true)) {
+      reqAction.authorization[0].actor = config.relayer
+      reqAction.authorization[0].permission = config.permission
 
       if (action[0].payer) {
-        transaction.data.payer = config.relayer
+        reqAction.data.payer = config.relayer
       }
 
       const result = await api.transact({
-        actions: [transaction]
+        actions: [reqAction]
       }, {
         blocksBehind: 3,
         expireSeconds: 30,
       });
 
-      console.log('result', result)
-
-      res.end(JSON.stringify(result));
+      console.log(`action ${reqAction.name} result: `, result)
+      
+      res.type('json')
+      res.json(JSON.stringify(result));
     } else {
       res.sendStatus(403)
       throw new Error('Action not permitted')
