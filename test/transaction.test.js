@@ -2,11 +2,11 @@ import supertest from "supertest"
 import app from "../index.js"
 
 // transaction with same vaccount id as relayer itself
-describe("POST /transaction", function() {
-  it("it should has status code 200", function(done) {
+describe("POST /transaction with same vaccount id as relayer itself", function() {
+  it("it should have status code 403", function(done) {
     supertest(app)
       .post("/transaction")
-      .send({
+      .send([{
         account: 'forceonkyli2',
         name: 'joincampaign',
         authorization: [{
@@ -19,7 +19,7 @@ describe("POST /transaction", function() {
           payer: process.env.RELAYER,
           sig: 'sig',
         }
-      })
+      }])
       .expect(403)
       .end(function(err, res){
         if (err) {
@@ -33,18 +33,33 @@ describe("POST /transaction", function() {
 
 // transaction with an unvalid action
 describe("POST /transaction wrong action", function() {
-  it("it should give an error that the action allowed", function(done) {
+  it("it should give an error that the isnt action allowed", function(done) {
     supertest(app)
       .post("/transaction")
-      .send({
-        account: 'forceonkyli2',
-        name: 'fakeaction!',
-        authorization: [{
-          actor: 'testjairtest',
-          permission: 'active',
-        }],
-        data: {}
-      })
+      .send([
+        {
+          account: 'forceonkyli2',
+          name: 'joincampaign',
+          authorization: [{
+            actor: 'testjairtest',
+            permission: 'active',
+          }],
+          data: {
+            account_id: process.env.VACCOUNT_ID,
+            campaign_id: 1,
+            payer: process.env.RELAYER,
+            sig: 'sig',
+          }
+        }, {
+          account: 'forceonkyli2',
+          name: 'fakeaction!',
+          authorization: [{
+            actor: 'testjairtest',
+            permission: 'active',
+          }],
+          data: {}
+        }
+      ])
       .expect(403)
       .end(function(err, res){
         if (err) done(err);
@@ -54,10 +69,10 @@ describe("POST /transaction wrong action", function() {
 });
 
 describe("POST /transaction wrong contract", function() {
-  it("it should give an error that the contract allowed", function(done) {
+  it("it should give an error that the contract isnt allowed", function(done) {
     supertest(app)
       .post("/transaction")
-      .send({
+      .send([{
         account: 'forceonkyli3',
         name: 'joincampaign',
         authorization: [{
@@ -65,7 +80,7 @@ describe("POST /transaction wrong contract", function() {
           permission: 'active',
         }],
         data: {}
-      })
+      }])
       .expect(403)
       .end(function(err, res){
         if (err) done(err);
