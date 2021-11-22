@@ -85,32 +85,33 @@ const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), te
 
 app.post('/transaction', async (req, res) => {
   try {
-    const reqAction = req.body
+    const reqActions = req.body
+    console.log(reqActions)
 
-    const action = config.actions.filter(action => {
-      return action.name === reqAction.name
-    })
+    // const action = config.actions.filter(action => {
+    //   return action.name === reqAction.name
+    // })
 
-    // check if relayer vaccountid isn't used as account_id or from_account
-    if (action[0]) {
-      action[0].relayerNotAllowed.forEach(element => {
-        if(reqAction.data[element] == config.relayerVAccountId) {
-          res.sendStatus(403)
-          throw new Error('Action not permitted')
-        }
-      });
-    }
+    // // check if relayer vaccountid isn't used as account_id or from_account
+    // if (action[0]) {
+    //   action[0].relayerNotAllowed.forEach(element => {
+    //     if(reqAction.data[element] == config.relayerVAccountId) {
+    //       res.sendStatus(403)
+    //       throw new Error('Action not permitted')
+    //     }
+    //   });
+    // }
 
-    if (action[0] && config.contracts.includes(reqAction.account) && (action[0].sig ? (reqAction.data.sig && reqAction.data.sig.length > 0) : true)) {
-      reqAction.authorization[0].actor = config.relayer
-      reqAction.authorization[0].permission = config.permission
+    // if (action[0] && config.contracts.includes(reqAction.account) && (action[0].sig ? (reqAction.data.sig && reqAction.data.sig.length > 0) : true)) {
+    //   reqAction.authorization[0].actor = config.relayer
+    //   reqAction.authorization[0].permission = config.permission
 
-      if (action[0].payer) {
-        reqAction.data.payer = config.relayer
-      }
+    //   if (action[0].payer) {
+    //     reqAction.data.payer = config.relayer
+    //   }
 
       const result = await api.transact({
-        actions: [reqAction]
+        actions: reqActions
       }, {
         blocksBehind: 3,
         expireSeconds: 30,
@@ -120,10 +121,10 @@ app.post('/transaction', async (req, res) => {
 
       res.type('json')
       res.json(JSON.stringify(result));
-    } else {
-      res.sendStatus(403)
-      throw new Error('Action not permitted')
-    }
+    // } else {
+      // res.sendStatus(403)
+      // throw new Error('Action not permitted')
+    // }
   } catch (error) {
     res.sendStatus(400)
     throw new Error(error)
