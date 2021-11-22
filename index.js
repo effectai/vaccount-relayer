@@ -54,6 +54,12 @@ const config = {
       relayerNotAllowed: []
     },
     {
+      name: 'publishbatch',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: ['account_id']
+    },
+    {
       name: 'mkcampaign',
       payer: true,
       sig: true,
