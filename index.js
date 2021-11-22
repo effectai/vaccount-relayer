@@ -85,11 +85,6 @@ app.post('/transaction', async (req, res) => {
       return action.name === reqAction.name
     })
 
-    if (action.length > 1) {
-      res.sendStatus(403)
-      throw new Error('Mulitple actions are not allowed')
-    }
-
     // check if relayer vaccountid isn't used as account_id or from_account
     if (action[0]) {
       action[0].relayerNotAllowed.forEach(element => {
@@ -99,7 +94,7 @@ app.post('/transaction', async (req, res) => {
         }
       });
     }
-  
+
     if (action[0] && config.contracts.includes(reqAction.account) && (action[0].sig ? (reqAction.data.sig && reqAction.data.sig.length > 0) : true)) {
       reqAction.authorization[0].actor = config.relayer
       reqAction.authorization[0].permission = config.permission
@@ -116,7 +111,7 @@ app.post('/transaction', async (req, res) => {
       });
 
       console.log(`action ${reqAction.name} result: `, result)
-      
+
       res.type('json')
       res.json(JSON.stringify(result));
     } else {
