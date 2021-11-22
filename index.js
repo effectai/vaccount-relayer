@@ -117,7 +117,7 @@ app.post('/transaction', async (req, res) => {
         expireSeconds: 30,
       });
 
-      console.log(`action ${reqAction.name} result: `, result)
+      console.log(`result: `, result)
 
       res.type('json')
       res.json(JSON.stringify(result));
