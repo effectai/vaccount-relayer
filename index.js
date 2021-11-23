@@ -76,6 +76,12 @@ const config = {
       payer: true,
       sig: true,
       relayerNotAllowed: ['account_id']
+    },
+    {
+      name: 'editcampaign',
+      payer: true,
+      sig: true,
+      relayerNotAllowed: []
     }]
 }
 
