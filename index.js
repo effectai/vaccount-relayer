@@ -56,7 +56,7 @@ const config = {
     {
       name: 'publishbatch',
       payer: false,
-      sig: true,
+      sig: false,
       relayerNotAllowed: ['account_id']
     },
     {
