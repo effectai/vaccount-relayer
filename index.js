@@ -54,6 +54,18 @@ const config = {
       relayerNotAllowed: []
     },
     {
+      name: 'rmbatch',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
+    },
+    {
+      name: 'rmcampaign',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
+    },
+    {
       name: 'publishbatch',
       payer: false,
       sig: false,
