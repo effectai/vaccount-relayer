@@ -5,7 +5,15 @@ import fetch from 'node-fetch';
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
-dotenv.config()
+
+if(process.argv[2] === 'local') {
+  console.log(`Running local environment\Host: ${process.env.HOST}, Relayer: ${process.env.RELAYER}`)
+  dotenv.config({ path: '.env.local' })
+} else {
+  console.log(`Running local environment\Host: ${process.env.HOST}, Relayer: ${process.env.RELAYER}`)
+  dotenv.config({ path: '.env' })
+}
+
 const app = express()
 const port = 3001
 

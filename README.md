@@ -1,8 +1,14 @@
 # Force Relayer
 BSC -> EOS relayer for the new Effect Force frontend
 # ✒️ Installation
+npm install
 
+Run in production:
 ```
-npm i
 node .
+```
+
+Run locally
+```
+node index.js local
 ```
