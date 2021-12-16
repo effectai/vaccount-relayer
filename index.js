@@ -15,7 +15,7 @@ if(process.argv[2] === 'local') {
 }
 
 const app = express()
-const port = 3001
+const port = 3301
 
 app.use(cors())
 app.use(bodyParser.json());
@@ -93,6 +93,18 @@ const config = {
     },
     {
       name: 'submittask',
+      payer: true,
+      sig: true,
+      relayerNotAllowed: ['account_id']
+    },
+    {
+      name: 'releasetask',
+      payer: true,
+      sig: true,
+      relayerNotAllowed: ['account_id']
+    },
+    {
+      name: 'reclaimtask',
       payer: true,
       sig: true,
       relayerNotAllowed: ['account_id']
