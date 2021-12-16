@@ -15,7 +15,7 @@ if(process.argv[2] === 'local') {
 }
 
 const app = express()
-const port = 3301
+const port = 3001
 
 app.use(cors())
 app.use(bodyParser.json());
