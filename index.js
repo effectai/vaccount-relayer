@@ -102,6 +102,12 @@ const config = {
       payer: true,
       sig: true,
       relayerNotAllowed: []
+    },
+    {
+      name: 'payout',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
     }]
 }
 
