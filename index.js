@@ -58,7 +58,7 @@ const config = {
     {
       name: 'mkbatch',
       payer: true,
-      sig: true,
+      sig: false,
       relayerNotAllowed: []
     },
     {
