@@ -120,6 +120,18 @@ const config = {
       payer: false,
       sig: true,
       relayerNotAllowed: []
+    },
+    {
+      name: 'closebatch',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
+    },
+    {
+      name: 'reopenbatch',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
     }]
 }
 
