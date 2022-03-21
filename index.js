@@ -190,8 +190,32 @@ app.post('/transaction', async (req, res) => {
   }
 })
 
+app.get('/info', async (req, res) => {
+  try {
+    const info = await rpc.get_info()
+    res.json(JSON.stringify(info));
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).json(JSON.stringify(error));
+    return res.json(JSON.stringify(error));
+  }
+})
+
+app.get('/status', async (req, res) => {
+  try {
+    const account_info = await rpc.get_account(config.relayer) 
+    return res.json(JSON.stringify(account_info))
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).json(JSON.stringify(error))
+    return res.json(JSON.stringify(error))   
+  }
+})
+
 app.listen(port, () => {
-  console.log(`Force relayer listening at http://localhost:${port}`)
+  console.log(`Force listening at http://localhost:${port}`)
 })
 
 export default app
