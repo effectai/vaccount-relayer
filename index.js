@@ -5,7 +5,6 @@ import fetch from 'node-fetch';
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import res from 'express/lib/response';
 
 if(process.argv[2] === 'local') {
   console.log(`Running local environment\Host: ${process.env.HOST}, Relayer: ${process.env.RELAYER}`)
