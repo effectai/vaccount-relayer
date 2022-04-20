@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import res from 'express/lib/response';
 
 if(process.argv[2] === 'local') {
   console.log(`Running local environment\Host: ${process.env.HOST}, Relayer: ${process.env.RELAYER}`)
@@ -205,6 +206,16 @@ app.post('/transaction', async (req, res) => {
     console.error(error)
     res.status(500)
     return res.json(JSON.stringify(error));
+  }
+})
+
+app.get('/config', async (req, res) => {
+  try {
+    res.json(JSON.stringify(config))
+  } catch (error) {
+    console.error(error)
+    res.status(500).json(JSON.stringify(error))
+    return res.json(JSON.stringify(error))
   }
 })
 
