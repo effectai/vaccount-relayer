@@ -211,35 +211,29 @@ app.post('/transaction', async (req, res) => {
 app.get('/config', async (req, res) => {
   try {
     res.json(config.actions)
-    return res.json(config.actions)
   } catch (error) {
     console.error(error)
-    res.status(500).json(JSON.stringify(error))
-    return res.json(JSON.stringify(error))
+    res.status(500).json(error)
   }
 })
 
 app.get('/info', async (req, res) => {
   try {
     const info = await rpc.get_info()
-    res.json(JSON.stringify(info));
-
+    res.json(info)
   } catch (error) {
     console.error(error)
-    res.status(500).json(JSON.stringify(error));
-    return res.json(JSON.stringify(error));
+    res.status(500).json(error)
   }
 })
 
 app.get('/status', async (req, res) => {
   try {
     const account_info = await rpc.get_account(config.relayer) 
-    return res.json(JSON.stringify(account_info))
-
+    res.json(account_info)
   } catch (error) {
     console.error(error)
-    res.status(500).json(JSON.stringify(error))
-    return res.json(JSON.stringify(error))   
+    res.status(500).json(error)
   }
 })
 
