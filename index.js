@@ -157,9 +157,9 @@ app.post('/transaction', async (req, res) => {
     const reqActions = req.body
 
     // If action is not present return a 404
-    if (!config.actions.includes(reqActions.name)) {
-      return res.status(404).json(JSON.stringify(`Action ${reqActions.name} not found`))
-    } 
+    // if (!config.actions.includes(reqActions.name)) {
+    //   return res.status(404).json(JSON.stringify(`Action ${reqActions.name} not found`))
+    // } 
 
     for (let i = 0; i < reqActions.length; i++) {
       const action = config.actions.filter(action => {
