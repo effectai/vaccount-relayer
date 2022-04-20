@@ -134,7 +134,7 @@ const config = {
       relayerNotAllowed: []
     },
     {
-      name: 'makequali',
+      name: 'mkquali',
       payer: false,
       sig: true,
       relayerNotAllowed: []
