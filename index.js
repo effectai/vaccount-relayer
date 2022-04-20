@@ -132,7 +132,20 @@ const config = {
       payer: false,
       sig: true,
       relayerNotAllowed: []
-    }]
+    },
+    {
+      name: 'makequali',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
+    },
+    {
+      name: 'assignquali',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
+    }
+  ]
 }
 
 const signatureProvider = new JsSignatureProvider([config.privateKey]);
@@ -142,6 +155,11 @@ const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), te
 app.post('/transaction', async (req, res) => {
   try {
     const reqActions = req.body
+
+    // If action is not present return a 404
+    if (!config.actions.includes(reqActions.name)) {
+      return res.status(404).json(JSON.stringify(`Action ${reqActions.name} not found`))
+    } 
 
     for (let i = 0; i < reqActions.length; i++) {
       const action = config.actions.filter(action => {
