@@ -212,6 +212,7 @@ app.post('/transaction', async (req, res) => {
 app.get('/config', async (req, res) => {
   try {
     res.json(JSON.stringify(config.actions))
+    return res.json(JSON.stringify(config.actions))
   } catch (error) {
     console.error(error)
     res.status(500).json(JSON.stringify(error))
