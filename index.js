@@ -144,6 +144,18 @@ const config = {
       payer: false,
       sig: true,
       relayerNotAllowed: []
+    },
+    {
+      name: 'uassignquali',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
+    },
+    {
+      name: 'editquali',
+      payer: false,
+      sig: true,
+      relayerNotAllowed: []
     }
   ]
 }
@@ -221,6 +233,15 @@ app.get('/info', async (req, res) => {
   try {
     const info = await rpc.get_info()
     res.json(info)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json(error)
+  }
+})
+
+app.get('/hello', async (req, res) => {
+  try {
+    res.json('Hello World!')
   } catch (error) {
     console.error(error)
     res.status(500).json(error)
