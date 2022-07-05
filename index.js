@@ -148,13 +148,13 @@ const config = {
     {
       name: 'uassignquali',
       payer: true,
-      sig: true,
+      sig: false,
       relayerNotAllowed: []
     },
     {
       name: 'editquali',
       payer: true,
-      sig: true,
+      sig: false,
       relayerNotAllowed: []
     }
   ]
